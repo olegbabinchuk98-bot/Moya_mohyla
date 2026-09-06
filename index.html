@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Вмогиле — v2</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;height:100%;overflow:hidden;background:#100c09;color:#e4d2b1;font-family:Georgia,serif}
+button{font:inherit;color:inherit}.app{height:100%;max-width:980px;margin:auto;display:flex;flex-direction:column;background:#211710}
+.top{height:62px;flex:none;display:flex;align-items:center;padding:5px 7px;gap:7px;background:linear-gradient(#493326,#241a13);border-bottom:2px solid #0a0705}
+.face{width:48px;height:48px;border:2px solid #a07b4b;border-radius:4px;background:linear-gradient(#5d4735 0 50%,#211711 51%);position:relative}.face:before{content:"";position:absolute;width:17px;height:17px;left:13px;top:8px;border-radius:50%;background:#b89572}.face:after{content:"";position:absolute;left:8px;right:8px;bottom:4px;height:20px;border-radius:50% 50% 3px 3px;background:#17100c}
+.info{flex:1;font-size:11px;line-height:16px}.name{color:#e6c883;font-weight:bold}.resources{display:flex;gap:5px}.r{background:#170f0b;border:1px solid #725436;border-radius:8px;padding:0 6px}.topBtn{background:#322319;border:1px solid #896743;border-radius:3px;padding:7px 8px;font-size:10px}
+.game{position:relative;flex:1;overflow:hidden;background:radial-gradient(ellipse at 50% 12%,#64503c 0,#3b2d22 40%,#18120e 83%)}
+.moon{position:absolute;right:12%;top:6%;width:80px;height:80px;border-radius:50%;background:#c1b18c22;box-shadow:0 0 35px #c8b68c18}
+.hud{position:absolute;z-index:5;top:7px;left:7px;background:#120d0acc;border:1px solid #6d5235;border-radius:3px;padding:5px;font-size:9px;width:155px}.bar{height:6px;background:#080605;border:1px solid #60452d;margin-top:3px}.bar i{display:block;height:100%;width:0;background:#819c57}
+.log{position:absolute;z-index:5;right:7px;top:7px;width:145px;background:#120d0acc;border:1px solid #6d5235;border-radius:3px;padding:5px;font-size:8px;line-height:12px}
+.cemetery{position:absolute;inset:10% 3% 10%;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(3,1fr);gap:9px;transform:perspective(800px) rotateX(9deg)}
+.plot{position:relative;min-width:0;border:2px solid #291c13;background:linear-gradient(145deg,#68482f,#3b291d);box-shadow:inset 0 0 0 1px #876040,0 5px 7px #0009;border-radius:3px}.plot:active{filter:brightness(1.35)}
+.plot.mine{outline:1px solid #a7834e}.fence{position:absolute;inset:5px;border:3px solid #2c1b12;border-left-color:#8e6744;border-bottom-color:#7b583a}
+.dirt{position:absolute;left:50%;bottom:8%;transform:translateX(-50%);width:60%;height:48%;border-radius:50%;background:radial-gradient(ellipse,#16100c,#2d1d13);box-shadow:0 0 0 4px #3a271a inset}
+.stone{position:absolute;left:50%;bottom:39%;transform:translateX(-50%);width:31%;height:35%;border-radius:45% 45% 5px 5px;background:linear-gradient(90deg,#68635a,#aaa08b,#5a554d);border:2px solid #2c2823;z-index:2}.stone:after{content:"✝";position:absolute;inset:0;display:grid;place-items:center;color:#302b27;font-size:14px}.stone.broken{opacity:.4;transform:translateX(-50%) rotate(12deg)}
+.pname{position:absolute;top:3px;left:3px;right:3px;text-align:center;font-size:8px;white-space:nowrap;overflow:hidden;text-shadow:1px 1px #000}.state{position:absolute;bottom:3px;left:2px;right:2px;text-align:center;font-size:7px;color:#bba88e}
+.target{position:absolute;z-index:20;left:50%;bottom:3%;transform:translateX(-50%);background:#160f0bdd;border:1px solid #896744;border-radius:3px;padding:4px 8px;font-size:9px;pointer-events:none}
+.bottom{height:57px;flex:none;display:flex;justify-content:space-around;align-items:center;background:linear-gradient(#3c2a1e,#201610);border-top:2px solid #0a0705}.nav{border:0;background:none;font-size:9px;color:#cdb895;min-width:65px}.nav b{display:block;font-size:18px;color:#d1a75e}
+.modal{position:fixed;z-index:50;inset:0;background:#000b;display:none;align-items:flex-end}.modal.on{display:flex}.sheet{width:min(980px,100%);max-height:87%;overflow:auto;background:linear-gradient(#3b2a1e,#211711);border:1px solid #8a6741;border-radius:10px 10px 0 0;padding:11px}.sheet h2{margin:0 0 8px;color:#e2c17b;font-size:18px}.close{float:right;background:#543a29;border:1px solid #8e6a43;border-radius:3px;padding:4px 8px}.tabs{display:flex;gap:4px;overflow:auto;margin-bottom:8px}.tab{background:#241913;border:1px solid #6e5135;padding:6px 8px;border-radius:3px;font-size:10px;white-space:nowrap}.items{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}.item{display:flex;gap:7px;background:#251a14;border:1px solid #654a31;border-radius:4px;padding:7px}.icon{width:43px;height:43px;flex:none;display:grid;place-items:center;background:#130e0b;border:1px solid #59432d;font-size:23px}.item h3{font-size:11px;margin:0 0 3px;color:#e0c27f}.item p{font-size:9px;margin:0;color:#b9a78e}.buy{margin-top:4px;background:#61442b;border:1px solid #987449;border-radius:3px;font-size:9px;padding:3px 5px}
+.toast{position:fixed;z-index:100;top:70px;left:50%;transform:translateX(-50%);background:#17100c;border:1px solid #a07a49;border-radius:4px;padding:7px 10px;font-size:10px;display:none}
+.bigProgress{position:absolute;z-index:30;left:50%;bottom:9%;transform:translateX(-50%);width:min(300px,80%);background:#160f0c;border:1px solid #a17b4a;padding:7px;display:none;text-align:center;font-size:10px}.bigProgress.on{display:block}.bigbar{height:9px;background:#090705;border:1px solid #63492e;margin-top:5px}.bigbar i{display:block;height:100%;width:0;background:#a37b49}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top">
+<div class="face"></div><div class="info"><div class="name">Олег • Рівень <span id="level">1</span></div><div class="resources"><span class="r">☠ <b id="skulls">125</b></span><span class="r">⚡ <b id="energy">100</b>/<b id="maxEnergy">100</b></span><span class="r">⚔ Капюшони</span></div></div>
+<button class="topBtn" onclick="shop()">Склеп</button>
+</header>
+<main class="game">
+<div class="moon"></div>
+<div class="hud">Досвід: <b id="xp">0</b>/<b id="next">10</b><div class="bar"><i id="xpbar"></i></div></div>
+<div class="log"><b>Журнал</b><br>• Петро відкопаний<br>• +2 ☠<br>• Іван полагодив могилу<br>• Марія поховала Сергія</div>
+<div class="cemetery" id="cemetery"></div>
+<div class="target">Натискай на землю могили — 40× відкопати / 50× закопати</div>
+<div class="bigProgress" id="dig"><b id="digText">Копання</b><div class="bigbar"><i id="digBar"></i></div></div>
+</main>
+<nav class="bottom">
+<button class="nav" onclick="myGrave()">☠<b>Моя могила</b></button>
+<button class="nav" onclick="help()">?<b>Допомога</b></button>
+<button class="nav" onclick="shop()">♜<b>Склеп</b></button>
+<button class="nav" onclick="clan()">⚔<b>Клан</b></button>
+</nav>
+</div>
+<div class="modal" id="modal"><div class="sheet"><button class="close" onclick="closeModal()">✕</button><div id="sheet"></div></div></div>
+<div class="toast" id="toast"></div>
+<script>
+const P={
+level:1,xp:0,skulls:125,energy:100,maxEnergy:100,
+shovel:0,monument:0,coffin:0,fence:0,repair:0,breaker:0,
+plots:Array.from({length:12},(_,i)=>({name:["Твоя могила","Петро","Іван","Сергій","Андрій","Максим","Віталій","Роман","Денис","Юра","Саша","Микола"][i],mine:i===0,buried:i%3!==0,broken:false,progress:0}))
+};
+const SHOP={
+"Лопати":[["🪓","Ручна лопата","+25% швидкості",50],["⛏️","Сталева лопата","+100% швидкості",125],["⚡","Електролопата","+400% швидкості",900]],
+"Пам'ятники":[["✝","Кам'яний хрест","+1 ☠",80],["🪦","Мармурова плита","+3 ☠",250],["☠","Чорний обеліск","+6 ☠",800]],
+"Гробы":[["⚰️","Старий гроб","+10 max ⚡",70],["⚰","Дубовий гроб","+80% відновлення",250],["🧰","Елітний саркофаг","+200% / +70",800]],
+"Оградки":[["🪵","Дерев'яна","+5 захисту",60],["⛓️","Кована","+15 захисту",180],["🧱","Чавунна","+25 захисту",500]],
+"Чинити":[["✋","Рука","+50% ремонту",60],["🔧","Майстер-ключ","+180% ремонту",250],["🦾","Рука термінатора","+350% ремонту",700]],
+"Ломати":[["👊","Кулак","+50% руйнування",60],["🔨","Кувалда","+250% руйнування",300],["💣","Демонтажник","+500% руйнування",900]]
+};
+function render(){const c=document.getElementById("cemetery");c.innerHTML="";P.plots.forEach((p,i)=>{let d=document.createElement("div");d.className="plot"+(p.mine?" mine":"");d.innerHTML=`<div class="fence"></div><div class="pname">${p.mine?"ТВОЯ МОГИЛА":p.name}</div><div class="dirt"></div><div class="stone ${p.broken?"broken":""}"></div><div class="state">${p.mine?"власна":p.buried?"закопаний":"відкопаний"}</div>`;d.onclick=e=>act(i,e.target.classList.contains("stone"));c.appendChild(d)})}
+function act(i,stone){
+ if(i===0){ if(stone){repairMine()} else toast("Твоя могила. Тут можна копати лише при пошкодженні.");return}
+ const p=P.plots[i];
+ if(stone){breakStone(p);return}
+ dig(p);
+}
+function spend(n){if(P.energy<n){toast("⚡ Недостатньо енергії");return false}P.energy-=n;return true}
+function dig(p){
+ const goal=p.buried?40:50;
+ if(!spend(1))return;
+ p.progress++;
+ document.getElementById("dig").classList.add("on");document.getElementById("digText").textContent=p.buried?"Відкопування "+p.name+" "+p.progress+"/"+goal:"Закопування "+p.name+" "+p.progress+"/"+goal;document.getElementById("digBar").style.width=p.progress/goal*100+"%";
+ if(p.progress>=goal){p.progress=0;p.buried=!p.buried;if(!p.buried){let gain=[1,1,3,6][P.monument]||1;P.skulls+=gain;addXP();toast("☠ "+p.name+" закопаний! +"+gain+" черепків")}else toast("⛏️ "+p.name+" відкопаний!");document.getElementById("dig").classList.remove("on");document.getElementById("digBar").style.width="0%"}
+ sync();render();
+}
+function breakStone(p){
+ if(P.level<2){toast("Руйнування пам'ятників відкриється на 2 рівні.");return}
+ if(!spend(3))return;
+ p.broken=true;P.skulls+=10;addXP();toast("💥 Пам'ятник зламано! Ти забрав 10% черепків.");
+ sync();render();
+}
+function repairMine(){if(P.level<2){toast("Ремонт відкриється на 2 рівні.");return}if(!spend(2))return;toast("🔧 Ремонт власного пам'ятника");sync()}
+function addXP(){P.xp++;if(P.level===1&&P.xp>=10){P.level=2;toast("⭐ Рівень 2! Відкрито інвентар і руйнування")}else if(P.level===2&&P.xp>=35){P.level=3;toast("⚔ Рівень 3! Відкрито клани та висмоктування енергії")}}
+function sync(){level.textContent=P.level;xp.textContent=P.xp;skulls.textContent=P.skulls;energy.textContent=P.energy;maxEnergy.textContent=P.maxEnergy;next.textContent=P.level===1?10:P.level===2?35:110;xpbar.style.width=Math.min(100,P.xp/(P.level===1?10:P.level===2?35:110)*100)+"%"}
+function toast(t){const x=document.querySelector(".toast");x.textContent=t;x.style.display="block";clearTimeout(window.tt);window.tt=setTimeout(()=>x.style.display="none",1700)}
+function closeModal(){modal.classList.remove("on")}
+function shop(tab="Лопати"){modal.classList.add("on");tab=tab||"Лопати";let h=`<h2>♜ Склеп</h2><div class="tabs">${Object.keys(SHOP).map(k=>`<button class="tab" onclick='shop(${JSON.stringify(k)})'>${k}</button>`).join("")}</div><div class="items">`;SHOP[tab].forEach((x,i)=>h+=`<div class="item"><div class="icon">${x[0]}</div><div><h3>${x[1]}</h3><p>${x[2]}</p><button class="buy" onclick='buy(${JSON.stringify(tab)},${i})'>☠ ${x[3]}</button></div></div>`);h+="</div>";sheet.innerHTML=h}
+function buy(tab,i){let x=SHOP[tab][i];if(P.skulls<x[3]){toast("Не вистачає черепків");return}P.skulls-=x[3];if(tab==="Лопати")P.shovel=i+1;if(tab==="Пам'ятники")P.monument=i+1;if(tab==="Гробы"){P.coffin=i+1;P.maxEnergy=100+[10,30,70][i];}if(tab==="Оградки")P.fence=i+1;if(tab==="Чинити")P.repair=i+1;if(tab==="Ломати")P.breaker=i+1;toast("Куплено: "+x[1]);sync();shop(tab)}
+function myGrave(){modal.classList.add("on");sheet.innerHTML=`<h2>☠ Моя могила</h2><p>Рівень ${P.level} • ☠ ${P.skulls} • ⚡ ${P.energy}/${P.maxEnergy}</p><p>Пам'ятник: ${P.monument||"базовий"}<br>Гроб: ${P.coffin||"базовий"}<br>Оградка: ${P.fence||"базова"}</p>`}
+function clan(){modal.classList.add("on");sheet.innerHTML=`<h2>⚔ Клан «Чорні капюшони»</h2><p>Рейтинг: 14 285</p><p>Твоє місце: #37</p><p>Суперник: «Білі тапочки»</p><p>${P.level<3?"Відкриється на 3 рівні":"Доступно: кланові цілі та висмоктування енергії."}</p>`}
+function help(){modal.classList.add("on");sheet.innerHTML=`<h2>?</h2><p><b>Земля</b> — натискай прямо на могилу. 40 натискань відкопують, 50 закопують.</p><p><b>Пам'ятник</b> — з 2 рівня ламається. Власний можна ремонтувати.</p><p><b>3 рівень</b> — клани та висмоктування енергії з ворога.</p><p>Енергія витрачається на дії та відновлюється з часом.</p>`}
+render();sync();
+setInterval(()=>{if(P.energy<P.maxEnergy){P.energy++;sync()}},6000);
+</script>
+</body></html>
